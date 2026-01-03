@@ -36,6 +36,14 @@ app.use(
 );
 
 // ✅ Preflight
+app.post("/api/seed", async (req, res) => {
+  if (req.query.key !== process.env.SEED_KEY) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  const seed = (await import("./seed.js")).default;
+  await seed();
+  res.json({ ok: true });
+});
 
 
 app.use(express.json({ limit: "2mb" }));
